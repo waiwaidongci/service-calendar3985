@@ -1,6 +1,13 @@
 import {request} from './client.js';
-export const loadAll=async()=>Object.fromEntries(await Promise.all(['sources','periods','policies','runs','schedules','deliveries','audits'].map(async k=>[k,await request('/'+k)])));
+export const loadAll=async()=>Object.fromEntries(await Promise.all(['sources','periods','policies','runs','schedules','deliveries','audits','repair-jobs'].map(async k=>[k.replace('-','_'),await request('/'+k)])));
 export const saveSource=(data,id)=>request('/sources'+(id?'/'+id:''),id?'PUT':'POST',{data});
 export const savePolicy=data=>request('/policies','POST',{data});
 export const submitRun=data=>request('/runs','POST',data);
 export const approveRun=(id,note)=>request('/runs/'+id+'/approve','POST',{note});
+export const selfCheckRun=id=>request('/runs/'+id+'/selfcheck','POST',{});
+export const repairRun=id=>request('/runs/'+id+'/repair','POST',{});
+export const tamperRun=(id,scope)=>request('/runs/'+id+'/tamper','POST',{scope});
+export const runVersions=id=>request('/runs/'+id+'/versions');
+export const runEvents=id=>request('/runs/'+id+'/events');
+export const runReviews=id=>request('/runs/'+id+'/reviews');
+export const runDiff=(id,fromV,toV)=>request(`/runs/${id}/diff?from_v=${fromV}&to_v=${toV}`);

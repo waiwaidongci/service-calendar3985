@@ -9,7 +9,8 @@ from src.middlewares.errors import Errors
 from src.middlewares.rate import RateLimit
 @asynccontextmanager
 async def lifespan(app):
- Base.metadata.create_all(engine)
+ from src.config.migrate import run_migrations
+ run_migrations()
  if os.getenv('SEED_DEMO')=='true':
   try:
    from scripts.seed_demo import seed
